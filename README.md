@@ -1,5 +1,7 @@
 # Brymen869s-XmlLib
 
+<img src="OthDocs/multimeter.png" width="100">
+
 Lib(x86) contains all needed files to use Brymen869s-XmlLib on Windows 64 bit system.
 
 Other Docs contains information details about communication with digital multimeter. 
