@@ -12,8 +12,7 @@ OthDocs contains information details about communication with digital multimeter
 
 * [Ahid library](http://ahidlib.com/pages/programming_cpp.php?lang=en) - a straight forward API of only eight functions allows you to connect your USB HID device with a Windows PC.
 
-* [TinyXml2](https://github.com/leethomason/tinyxml2) - is a simple, small, efficient, C++ XML parser that can be easily integrated into other programs.
-
+* [TinyXml2](https://github.com/leethomason/tinyxml2) - is a simple, small, efficient, C++ XML parser. 
 ### Brymen869.h
 
 Header file have 3 functions declaration. If you want to start read data you have to call Brymen_start() then communication will be open. 
