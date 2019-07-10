@@ -10,8 +10,9 @@ OthDocs contains information details about communication with digital multimeter
 
 ## Dependencies
 
-*Ahid library - a straight forward API of only eight functions allows you to connect your USB HID device with a Windows PC.
+*[Ahid library](http://ahidlib.com/pages/programming_cpp.php?lang=en) - a straight forward API of only eight functions allows you to connect your USB HID device with a Windows PC.
 
+*[TinyXml2](https://github.com/leethomason/tinyxml2) - is a simple, small, efficient, C++ XML parser that can be easily integrated into other programs.
 
 ### Brymen869.h
 
