@@ -8,6 +8,11 @@ Lib(x86) contains all needed files to use Brymen869s-XmlLib on Windows 64 bit sy
 
 OthDocs contains information details about communication with digital multimeter. 
 
+## Dependencies
+
+*Ahid library - a straight forward API of only eight functions allows you to connect your USB HID device with a Windows PC.
+
+
 ### Brymen869.h
 
 Header file have 3 functions declaration. If you want to start read data you have to call Brymen_start() then communication will be open. 
