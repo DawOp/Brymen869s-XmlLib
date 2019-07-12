@@ -17,7 +17,7 @@ OthDocs contains information details about communication with digital multimeter
 * [TinyXml2](https://github.com/leethomason/tinyxml2) - is a simple, small, efficient, C++ XML parser. 
 
 
-### Brymen869.h
+## Brymen869.h
 
 Header file have 3 functions declaration. If you want to start read data you have to call Brymen_start() then communication will be open. 
 Brymen_registerCallback allow you to read data that are displayed on the screen (only if you called Brymen_start()). 
