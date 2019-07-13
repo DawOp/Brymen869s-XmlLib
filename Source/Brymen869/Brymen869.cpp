@@ -21,12 +21,13 @@
 #define VID								(0x0820)
 #define PID								(0x0001)   
 
+
 unsigned char data_table[64];  /* buffer */
 int inputHandle;
 int outputHandle;
 bool isConnected;
 bool readed;
-std::string date; 
+std::string date;	/* when measurements was taken from multimeter */ 
 
 
 void init(){
@@ -66,10 +67,9 @@ int connect() {
 }
 
 
-
 void xmlBuild(std::string& measurement_1, std::string& measurement_2, unsigned char* data_table, std::string& date, Brymen_CallbackType cb, void* user_data) {
 	tinyxml2::XMLDocument xmlDoc;
-	tinyxml2::XMLNode * pRoot = xmlDoc.NewElement("POMIARY_BRYMEN");
+	tinyxml2::XMLNode* pRoot = xmlDoc.NewElement("POMIARY_BRYMEN");
 	xmlDoc.InsertFirstChild(pRoot);
 
 	tinyxml2::XMLElement* pElement = xmlDoc.NewElement("Pomiar_dolny");
@@ -132,10 +132,9 @@ void xmlBuild(std::string& measurement_1, std::string& measurement_2, unsigned c
 		pRoot->InsertEndChild(pElement);
 	}
 
-	pElement = xmlDoc.NewElement("Data");
-	pElement->SetText(date.c_str());
+	pElement = xmlDoc.NewElement("Date"); /* Add Date to XML*/
+	pElement->SetText(date.c_str());  
 	pRoot->InsertEndChild(pElement);
-
 
 	std::string n;
 	tinyxml2::XMLElement* plement = pRoot->ToElement();
@@ -154,10 +153,8 @@ void xmlBuild(std::string& measurement_1, std::string& measurement_2, unsigned c
 }
 
 
-
 void decode(Brymen_CallbackType cb, void* user_data) {
 	std::map<unsigned char, std::string> sevNum;
-
 
 	sevNum[0b10111110] = "0";
 	sevNum[0b10100000] = "1";
@@ -180,7 +177,6 @@ void decode(Brymen_CallbackType cb, void* user_data) {
 	sevNum[0b01011110] = "E";
 	sevNum[0b01000010] = "r";
 	sevNum[0b01100010] = "n";
-
 
 	std::string measurement_1;
 	std::string measurement_2;
@@ -215,8 +211,6 @@ void decode(Brymen_CallbackType cb, void* user_data) {
 		    measurement_2 += sevNum[data_table[i]];
 		}
 	}
-
-
 
 
 	if ((data_table[2] >> 7) & 1) {
@@ -278,6 +272,7 @@ void decode(Brymen_CallbackType cb, void* user_data) {
 	    unit_1 = "D%";
 	}
 
+
 	if ((data_table[15] >> 6) & 1) {
 	    unit_1.insert(0, "k");
 	}
@@ -293,7 +288,6 @@ void decode(Brymen_CallbackType cb, void* user_data) {
 	else if ((data_table[14] >> 6) & 1) {
 	    unit_1.insert(0, "n");
 	}
-
 
 
 	if ((data_table[14] >> 2) & 1) {
@@ -327,7 +321,6 @@ void decode(Brymen_CallbackType cb, void* user_data) {
 }
 
 
-
 void read() {
     if (!isConnected) {
 	return;
@@ -349,14 +342,15 @@ void read() {
 }
 
 
-void sendOut() { // send queries
+void sendOut() {		/* send queries */
     int bytesWritten = 0;
     unsigned char data_commands[] = { '\0', '†' , 'f' };
 
     AHid_write(outputHandle, data_commands, 3, &bytesWritten);
 }
 
-void readCall() { // call read per 100 ms
+
+void readCall() {		/* call read per 100 ms */
     while (!readed && isConnected) {
 	std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_INTERVALL_MS));
 	read();
@@ -372,10 +366,12 @@ int Brymen_start() {
     return 0;
 }
 
+
 void Brymen_shutdown() {
     readed = false;
     isConnected = false;
 }
+
 
 void Brymen_registerCallback(Brymen_CallbackType cb, void * user_data) {
     std::thread(readCall).detach();
