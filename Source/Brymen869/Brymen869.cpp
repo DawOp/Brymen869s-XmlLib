@@ -1,4 +1,4 @@
-// Brymen869.cpp : Defines the exported functions for the DLL application.
+/* Brymen869.cpp : Defines the exported functions for the DLL application. */
 
 #include <iostream>
 #include <string>
@@ -21,20 +21,19 @@
 #define VID								(0x0820)
 #define PID								(0x0001)   
 
-
-unsigned char data_table[64];
+unsigned char data_table[64];  /* buffer */
 int inputHandle;
 int outputHandle;
 bool isConnected;
-int count;
-std::string date;
+bool readed;
+std::string date; 
 
 
-void init() {
+void init(){
 	isConnected = false;
 	outputHandle = 0;
 	inputHandle = 0;
-	count = 0;
+	readed = false;
 }
 
 
@@ -150,8 +149,7 @@ void xmlBuild(std::string& measurement_1, std::string& measurement_2, unsigned c
 		n += d;
 	}
 
-	//std::cout << n << std::endl;
-
+	/* Perform callback function */
 	cb(n.c_str(),n.size(),user_data);
 }
 
@@ -324,7 +322,7 @@ void decode(Brymen_CallbackType cb, void* user_data) {
 	    unit_2.insert(0, "m");
 	}
 
-
+	/* Passsing strings to build xml */
 	xmlBuild(measurement_1, measurement_2, data_table, date, cb, user_data);
 }
 
@@ -344,7 +342,7 @@ void read() {
 		auto end = std::chrono::system_clock::now();
 		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
 		std::string date = std::ctime(&end_time);
-		count++;
+		readed = true;
 	    }
 	}
     }
@@ -359,7 +357,7 @@ void sendOut() { // send queries
 }
 
 void readCall() { // call read per 100 ms
-    while (count < 1 && isConnected) {
+    while (!readed && isConnected) {
 	std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_INTERVALL_MS));
 	read();
     }
@@ -375,18 +373,19 @@ int Brymen_start() {
 }
 
 void Brymen_shutdown() {
-    count = 0;
+    readed = false;
     isConnected = false;
 }
 
 void Brymen_registerCallback(Brymen_CallbackType cb, void * user_data) {
     std::thread(readCall).detach();
 
-    while (count < 1 && isConnected) {
+    while (!readed && isConnected) {
 	sendOut();
 	std::chrono::seconds dura(1);
 	std::this_thread::sleep_for(dura);
     }
+
     decode(cb, user_data);
-    count = 0;
+    readed = false;
 }
