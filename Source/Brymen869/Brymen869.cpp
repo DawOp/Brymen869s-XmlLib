@@ -24,10 +24,10 @@ int inputHandle;
 int outputHandle;
 bool isConnected;
 bool readed;
-std::string date;	/* when measurements was taken from multimeter */ 
+std::string date;	/* xml measurements */
 
 
-void init(){
+void init() {
 	isConnected = false;
 	outputHandle = 0;
 	inputHandle = 0;
@@ -36,12 +36,12 @@ void init(){
 
 int connect() {
 	if (!isConnected) {
-		unsigned char * parm = (unsigned char *)"\0";
+		unsigned char* parm = (unsigned char*)"\0";
 		int result;
 
 		result = AHid_init(parm);
 		if (AHID_ERROR == result) {
-			return-1;  
+			return-1;
 		}
 
 		AHid_register(&outputHandle, VID, PID, -1, 0, 64, AHID_REPORT_TYPE_OUTPUT);
@@ -129,7 +129,7 @@ void xmlBuild(std::string& measurement_1, std::string& measurement_2, unsigned c
 	}
 
 	pElement = xmlDoc.NewElement("Date"); /* Add Date to XML*/
-	pElement->SetText(date.c_str());  
+	pElement->SetText(date.c_str());
 	pRoot->InsertEndChild(pElement);
 
 	std::string n;
@@ -145,7 +145,7 @@ void xmlBuild(std::string& measurement_1, std::string& measurement_2, unsigned c
 	}
 
 	/* Perform callback function */
-	cb(n.c_str(),n.size(),user_data);
+	cb(n.c_str(), n.size(), user_data);
 }
 
 
@@ -198,115 +198,115 @@ void decode(Brymen_CallbackType cb, void* user_data) {
 			measurement_2 += sevNum[data_table[i] - 1];
 		}
 		else if (i == 10 && (data_table[i] & 1)) {
-		    measurement_1 += sevNum[data_table[i] - 1];
+			measurement_1 += sevNum[data_table[i] - 1];
 		}
 		else {
-		    measurement_2 += sevNum[data_table[i]];
+			measurement_2 += sevNum[data_table[i]];
 		}
 	}
 
 
 	if ((data_table[2] >> 7) & 1) {
-	    measurement_1.insert(0, "-");
+		measurement_1.insert(0, "-");
 	}
 	if ((data_table[9] >> 4) & 1) {
-	    measurement_2.insert(0, "-");
+		measurement_2.insert(0, "-");
 	}
 
 	if (((data_table[2]) & 1) && ((data_table[1] >> 4) & 1)) {
-	    measurement_1.insert(0, "DC+AC  ");
+		measurement_1.insert(0, "DC+AC  ");
 	}
 	else if ((data_table[1] >> 4) & 1) {
-	    measurement_1.insert(0, "DC  ");
+		measurement_1.insert(0, "DC  ");
 	}
 	else if ((data_table[2]) & 1) {
-	    measurement_1.insert(0, "AC  ");
+		measurement_1.insert(0, "AC  ");
 	}
 	else if (((data_table[2] >> 1) & 1) && ((data_table[2] >> 3) & 1)) {
-	    measurement_1.insert(0, "T1-T2  ");
+		measurement_1.insert(0, "T1-T2  ");
 	}
 	else if ((data_table[2] >> 1) & 1) {
-	    measurement_1.insert(0, "T1  ");
+		measurement_1.insert(0, "T1  ");
 	}
 	else if ((data_table[2] >> 3) & 1) {
-	    measurement_1.insert(0, "T2  ");
+		measurement_1.insert(0, "T2  ");
 	}
 
 	if ((data_table[9] >> 5) & 1) {
-	    measurement_2.insert(0, "AC  ");
+		measurement_2.insert(0, "AC  ");
 	}
 	else if ((data_table[9] >> 6) & 1) {
-	    measurement_2.insert(0, "T2  ");
+		measurement_2.insert(0, "T2  ");
 	}
 
 
 	if ((data_table[15] >> 4) & 1) {
-	    unit_1 = "Ohm";
+		unit_1 = "Ohm";
 	}
 	else if (data_table[15] & 1) {
-	    unit_1 = "Hz";
+		unit_1 = "Hz";
 	}
 	else if ((data_table[15] >> 1) & 1) {
-	    unit_1 = "dBm";
+		unit_1 = "dBm";
 	}
 	else if (data_table[8] & 1) {
-	    unit_1 = "V";
+		unit_1 = "V";
 	}
 	else if ((data_table[14] >> 7) & 1) {
-	    unit_1 = "A";
+		unit_1 = "A";
 	}
 	else if ((data_table[14] >> 5) & 1) {
-	    unit_1 = "F";
+		unit_1 = "F";
 	}
 	else if ((data_table[14] >> 4) & 1) {
-	    unit_1 = "S";
+		unit_1 = "S";
 	}
 	else if ((data_table[15] >> 7) & 1) {
-	    unit_1 = "D%";
+		unit_1 = "D%";
 	}
 
 
 	if ((data_table[15] >> 6) & 1) {
-	    unit_1.insert(0, "k");
+		unit_1.insert(0, "k");
 	}
 	else if ((data_table[15] >> 5) & 1) {
-	    unit_1.insert(0, "M");
+		unit_1.insert(0, "M");
 	}
 	else if ((data_table[15] >> 2) & 1 && !((data_table[15] >> 1) & 1)) {
-	    unit_1.insert(0, "m");
+		unit_1.insert(0, "m");
 	}
 	else if ((data_table[15] >> 3) & 1) {
-	    unit_1.insert(0, "u");
+		unit_1.insert(0, "u");
 	}
 	else if ((data_table[14] >> 6) & 1) {
-	    unit_1.insert(0, "n");
+		unit_1.insert(0, "n");
 	}
 
 
 	if ((data_table[14] >> 2) & 1) {
-	    unit_2 = "Hz";
+		unit_2 = "Hz";
 	}
 	else if ((data_table[9] >> 2) & 1) {
-	    unit_2 = "A";
+		unit_2 = "A";
 	}
 	else if ((data_table[14] >> 3) & 1) {
-	    unit_2 = "V";
+		unit_2 = "V";
 	}
 	else if ((data_table[9] >> 3) & 1) {
-	    unit_2 = "%4-20mA";
+		unit_2 = "%4-20mA";
 	}
 
 	if (data_table[14] & 1) {
-	    unit_2.insert(0, "M");
+		unit_2.insert(0, "M");
 	}
 	else if ((data_table[14] >> 1) & 1) {
-	    unit_2.insert(0, "k");
+		unit_2.insert(0, "k");
 	}
 	else if (data_table[9] & 1) {
-	    unit_2.insert(0, "u");
+		unit_2.insert(0, "u");
 	}
 	else if (data_table[9] >> 1 & 1) {
-	    unit_2.insert(0, "m");
+		unit_2.insert(0, "m");
 	}
 
 	/* Passsing strings to build xml */
@@ -314,61 +314,61 @@ void decode(Brymen_CallbackType cb, void* user_data) {
 }
 
 void read() {
-    if (!isConnected) {
-	return;
-    }
+	if (!isConnected) {
+		return;
+	}
 
-    int bytesRead = 0;
-    std::string measure;
+	int bytesRead = 0;
+	std::string measure;
 
-    for (int i = 0; i < TIMER_INTERVALL_MS; i++) {
+	for (int i = 0; i < TIMER_INTERVALL_MS; i++) {
 		if (AHID_OK == AHid_read(inputHandle, data_table, 64, &bytesRead)) {
 			if (bytesRead > 20) {
-			auto end = std::chrono::system_clock::now();
-			std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-			std::string date = std::ctime(&end_time);
-			readed = true;
+				auto end = std::chrono::system_clock::now();
+				std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+				std::string date = std::ctime(&end_time);
+				readed = true;
 			}
 		}
-    }
+	}
 }
 
 void sendOut() {		/* send queries */
-    int bytesWritten = 0;
-    unsigned char data_commands[] = { '\0', '†' , 'f' };
+	int bytesWritten = 0;
+	unsigned char data_commands[] = { '\0', '†' , 'f' };
 
-    AHid_write(outputHandle, data_commands, 3, &bytesWritten);
+	AHid_write(outputHandle, data_commands, 3, &bytesWritten);
 }
 
 void readCall() {		/* call read per 100 ms */
-    while (!readed && isConnected) {
+	while (!readed && isConnected) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_INTERVALL_MS));
 		read();
-    }
+	}
 }
 
 int Brymen_start() {
-    init();
-    if (connect() == AHID_ERROR) {
+	init();
+	if (connect() == AHID_ERROR) {
 		return -1;
-    }
-    return 0;
+	}
+	return 0;
 }
 
 void Brymen_shutdown() {
-    readed = false;
-    isConnected = false;
+	readed = false;
+	isConnected = false;
 }
 
-void Brymen_registerCallback(Brymen_CallbackType cb, void * user_data) {
-    std::thread(readCall).detach();
+void Brymen_registerCallback(Brymen_CallbackType cb, void* user_data) {
+	std::thread(readCall).detach();
 
-    while (!readed && isConnected) {
+	while (!readed && isConnected) {
 		sendOut();
 		std::chrono::seconds dura(1);
 		std::this_thread::sleep_for(dura);
-    }
+	}
 
-    decode(cb, user_data);
-    readed = false;
+	decode(cb, user_data);
+	readed = false;
 }
