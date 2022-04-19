@@ -19,6 +19,8 @@
 
 
 Brymen_registerCallback() - parse measurements from multimeter screen into xml and invokes any function passed as callback on xml measurements.
+
 Brymen_start() - starts a connection with the multimeter.
+
 Brymen_end() turns off a connection.
 
