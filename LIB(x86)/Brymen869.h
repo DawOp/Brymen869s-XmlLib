@@ -1,4 +1,3 @@
-// MathLibrary.h - Contains declarations of math functions
 #pragma once
 
 #ifdef BRYMEN869_EXPORTS
@@ -9,17 +8,12 @@
 
 #include <functional>
 
-
 extern "C" {
+	using Brymen_CallbackType = std::function<void(const char* xmlptr, size_t size, void* user_data)>;
 
-	using Brymen_CallbackType = std::function<void(const char* xmlptr, size_t size, void * user_data)>;
+	void BRYMEN869_API Brymen_registerCallback(Brymen_CallbackType cb, void* user_data);
 
-	//typedef void(*Brymen_CallbackType) (const char* xmlptr, size_t size, void * user_data);
-
-	void BRYMEN869_API Brymen_registerCallback(Brymen_CallbackType cb, void * user_data);
-
-	int	BRYMEN869_API Brymen_start();
+	int BRYMEN869_API Brymen_start();
 
 	void BRYMEN869_API Brymen_shutdown();
-
 };
