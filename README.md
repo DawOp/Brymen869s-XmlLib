@@ -13,9 +13,9 @@
 
 ## Usage
 
-Lib(x86) contains all needed files to use Brymen869s-XmlLib for 64-bit Windows 64.
+*Lib(x86)* contains all needed files to use Brymen869s-XmlLib for 64-bit Windows 64.
 
-Docs contains information details about communication with digital multimeter. 
+*Docs* contains information details about communication with digital multimeter. 
 
 
 Header file have 3 functions declaration. If you want to start read data you have to call Brymen_start() then communication will be open. 
