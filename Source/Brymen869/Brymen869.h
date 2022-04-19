@@ -9,9 +9,9 @@
 #include <functional>
 
 extern "C" {
-	using Brymen_CallbackType = std::function<void(const char* xmlptr, size_t size, void * user_data)>;
+	using Brymen_CallbackType = std::function<void(const char* xmlptr, size_t size, void* user_data)>;
 
-	void BRYMEN869_API Brymen_registerCallback(Brymen_CallbackType cb, void * user_data);
+	void BRYMEN869_API Brymen_registerCallback(Brymen_CallbackType cb, void* user_data);
 
 	int BRYMEN869_API Brymen_start();
 
