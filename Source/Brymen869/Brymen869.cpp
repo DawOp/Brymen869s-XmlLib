@@ -13,14 +13,11 @@
 #include <Ahid\AHid.h>
 #include <tinyxml2\tinyxml2.h>
 
-
 #pragma warning(disable : 4996)
-
 
 #define TIMER_INTERVALL_MS				(100)
 #define VID								(0x0820)
 #define PID								(0x0001)   
-
 
 unsigned char data_table[64];  /* buffer */
 int inputHandle;
@@ -36,7 +33,6 @@ void init(){
 	inputHandle = 0;
 	readed = false;
 }
-
 
 int connect() {
 	if (!isConnected) {
@@ -183,7 +179,6 @@ void decode(Brymen_CallbackType cb, void* user_data) {
 	std::string unit_1;
 	std::string unit_2;
 
-
 	for (int i = 3; i < 9; i++) {
 		if (i != 3 && i != 8 && (data_table[i] & 1)) {
 			measurement_1 += ".";
@@ -196,8 +191,6 @@ void decode(Brymen_CallbackType cb, void* user_data) {
 			measurement_1 += sevNum[data_table[i]];
 		}
 	}
-
-
 
 	for (int i = 10; i < 14; i++) {
 		if (i != 10 && (data_table[i]) & 1) {
@@ -320,7 +313,6 @@ void decode(Brymen_CallbackType cb, void* user_data) {
 	xmlBuild(measurement_1, measurement_2, data_table, date, cb, user_data);
 }
 
-
 void read() {
     if (!isConnected) {
 	return;
@@ -330,17 +322,16 @@ void read() {
     std::string measure;
 
     for (int i = 0; i < TIMER_INTERVALL_MS; i++) {
-	if (AHID_OK == AHid_read(inputHandle, data_table, 64, &bytesRead)) {
-	    if (bytesRead > 20) {
-		auto end = std::chrono::system_clock::now();
-		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-		std::string date = std::ctime(&end_time);
-		readed = true;
-	    }
-	}
+		if (AHID_OK == AHid_read(inputHandle, data_table, 64, &bytesRead)) {
+			if (bytesRead > 20) {
+			auto end = std::chrono::system_clock::now();
+			std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+			std::string date = std::ctime(&end_time);
+			readed = true;
+			}
+		}
     }
 }
-
 
 void sendOut() {		/* send queries */
     int bytesWritten = 0;
@@ -349,37 +340,33 @@ void sendOut() {		/* send queries */
     AHid_write(outputHandle, data_commands, 3, &bytesWritten);
 }
 
-
 void readCall() {		/* call read per 100 ms */
     while (!readed && isConnected) {
-	std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_INTERVALL_MS));
-	read();
+		std::this_thread::sleep_for(std::chrono::milliseconds(TIMER_INTERVALL_MS));
+		read();
     }
 }
-
 
 int Brymen_start() {
     init();
     if (connect() == AHID_ERROR) {
-	return -1;
+		return -1;
     }
     return 0;
 }
-
 
 void Brymen_shutdown() {
     readed = false;
     isConnected = false;
 }
 
-
 void Brymen_registerCallback(Brymen_CallbackType cb, void * user_data) {
     std::thread(readCall).detach();
 
     while (!readed && isConnected) {
-	sendOut();
-	std::chrono::seconds dura(1);
-	std::this_thread::sleep_for(dura);
+		sendOut();
+		std::chrono::seconds dura(1);
+		std::this_thread::sleep_for(dura);
     }
 
     decode(cb, user_data);
