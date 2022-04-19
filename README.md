@@ -1,7 +1,7 @@
 # Brymen869s-XmlLib
 
 
-<img src="OthDocs/multimeter.png" width="200">
+<img src="Docs/multimeter.png" width="200">
 
 
 ## Usage
