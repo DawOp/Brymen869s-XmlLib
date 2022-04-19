@@ -7,7 +7,7 @@
 
 ## Dependencies
 
-* [Ahid library](http://ahidlib.com/pages/programming_cpp.php?lang=en) - USB HID device driver for Windows.
+* [Ahid library](http://ahidlib.com/pages/programming_cpp.php?lang=en) - USB HID driver device for Windows.
 
 * [TinyXml2](https://github.com/leethomason/tinyxml2) - c++ xml parser. 
 
@@ -18,7 +18,7 @@
 **Docs** contains information details about communication with digital multimeter. 
 
 
-Header file have 3 functions declaration. If you want to start read data you have to call Brymen_start() then communication will be open. 
-Brymen_registerCallback allow you to read data that are displayed on the screen (only if you called Brymen_start()). 
-You can pass your function as a parameter then you will be able to do anything you want with readed measurements.
-Brymen_end() turns off connection. 
+Brymen_registerCallback() - parse measurements from multimeter screen into xml and invokes any function passed as callback on xml measurements.
+Brymen_start() - starts a connection with the multimeter.
+Brymen_end() turns off a connection.
+
