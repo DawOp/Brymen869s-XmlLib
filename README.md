@@ -1,5 +1,5 @@
 # Brymen869s-XmlLib
-
+A library that allows reading measurements of digital multimeter Brymen869s and parse them into XML
 
 <img src="Docs/multimeter.png" width="200">
 
